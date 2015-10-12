@@ -66,7 +66,7 @@
     [labelView setAutoresizingMask:(UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth)];
     labelView.delegate = self;
     [labelView setShowContentShadow:NO];
-    [labelView setEnableMoveRestriction:YES];
+    //[labelView setEnableMoveRestriction:YES];
     [labelView setTextField:aLabel];
     [labelView setFontName:@"Baskerville-BoldItalic"];
     [labelView setFontSize:21.0];

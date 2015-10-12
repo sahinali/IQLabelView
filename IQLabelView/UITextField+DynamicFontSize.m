@@ -8,8 +8,8 @@
 
 @implementation UITextField (DynamicFontSize)
 
-#define CATEGORY_DYNAMIC_FONT_SIZE_MAXIMUM_VALUE 101
-#define CATEGORY_DYNAMIC_FONT_SIZE_MINIMUM_VALUE 9
+#define CATEGORY_DYNAMIC_FONT_SIZE_MAXIMUM_VALUE 201
+#define CATEGORY_DYNAMIC_FONT_SIZE_MINIMUM_VALUE 5
 
 - (void)adjustsFontSizeToFillRect:(CGRect)newBounds
 {
@@ -25,7 +25,7 @@
                                                        context:nil];
         
         if (CGRectGetHeight(rectSize) <= CGRectGetHeight(newBounds)) {
-            ((IQLabelView *)self.superview).fontSize = (CGFloat)i-1;
+            ((IQLabelView *)self.superview).fontSize = (CGFloat)i-2;
             break;
         }
     }
@@ -38,7 +38,7 @@
     NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text
                                                                          attributes:@{ NSFontAttributeName : font }];
     
-    CGRect rectSize = [attributedText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGRectGetHeight(self.frame)-24)
+    CGRect rectSize = [attributedText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGRectGetHeight(self.frame)-20)
                                                    options:NSStringDrawingUsesLineFragmentOrigin
                                                    context:nil];
     

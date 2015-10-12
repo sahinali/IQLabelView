@@ -6,31 +6,31 @@
 
 @protocol IQLabelViewDelegate;
 
-@interface IQLabelView : UIView 
+@interface IQLabelView : UIView<UIGestureRecognizerDelegate, UITextFieldDelegate>
 {
     UITextField *textView;
     UIImageView *rotateView;
     UIImageView *closeView;
-
+    
     BOOL isShowingEditingHandles;
 }
 
-@property (nonatomic, retain) UIColor *textColor;
-@property (nonatomic, retain) UIColor *borderColor;
+@property (assign, nonatomic) UIColor *textColor;
+@property (assign, nonatomic) UIColor *borderColor;
 
-@property (nonatomic, retain) NSString *fontName;
-@property (nonatomic, assign) CGFloat fontSize;
+@property (strong, nonatomic) NSString *fontName;
+@property (assign, nonatomic) CGFloat fontSize;
 
-@property (nonatomic, strong) UIImage *closeImage;
-@property (nonatomic, strong) UIImage *rotateImage;
+@property (assign, nonatomic) UIImage *closeImage;
+@property (assign, nonatomic) UIImage *rotateImage;
 
-@property (nonatomic, assign) id <IQLabelViewDelegate> delegate;
+@property (unsafe_unretained) id <IQLabelViewDelegate> delegate;
 
-@property (nonatomic) BOOL showContentShadow;     //Default is YES.
-@property (nonatomic) BOOL enableClose;           //Default is YES. if set to NO, user can't delete the view
-@property (nonatomic) BOOL enableRotate;          //Default is YES. if set to NO, user can't Rotate the view
-@property (nonatomic) BOOL enableMoveRestriction; //Default is NO.
+@property (assign, nonatomic) BOOL showContentShadow;    //Default is YES.
+@property (assign, nonatomic) BOOL enableClose;          //Default is YES. if set to NO, user can't delete the view
+@property (assign, nonatomic) BOOL enableRotate;         //Default is YES. if set to NO, user can't Rotate the view
 
+//Give call's to refresh. If SuperView is UIScrollView. And it changes it's zoom scale.
 - (void)refresh;
 
 - (void)hideEditingHandles;
@@ -43,17 +43,16 @@
 @end
 
 @protocol IQLabelViewDelegate <NSObject>
-
 @optional
-
-- (void)labelViewDidClose:(IQLabelView *)label;
-- (void)labelViewDidShowEditingHandles:(IQLabelView *)label;
-- (void)labelViewDidHideEditingHandles:(IQLabelView *)label;
-- (void)labelViewDidStartEditing:(IQLabelView *)label;
 - (void)labelViewDidBeginEditing:(IQLabelView *)label;
 - (void)labelViewDidChangeEditing:(IQLabelView *)label;
 - (void)labelViewDidEndEditing:(IQLabelView *)label;
 
+- (void)labelViewDidClose:(IQLabelView *)label;
+
+- (void)labelViewDidShowEditingHandles:(IQLabelView *)label;
+- (void)labelViewDidHideEditingHandles:(IQLabelView *)label;
+- (void)labelViewDidStartEditing:(IQLabelView *)label;
 @end
 
 
