@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C28E4081BCEA3CA0031EDB3 /* MICKEY.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 2C28E4061BCEA3CA0031EDB3 /* MICKEY.TTF */; };
+		2C28E4091BCEA3CA0031EDB3 /* Minnie.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 2C28E4071BCEA3CA0031EDB3 /* Minnie.TTF */; };
+		2CD0F5121BCFEEF800312489 /* DK Petit Four.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2CD0F5101BCFEEF800312489 /* DK Petit Four.otf */; };
+		2CD0F5151BCFEF7700312489 /* orange juice.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CD0F5141BCFEF7700312489 /* orange juice.ttf */; };
+		2CEA2C991BCE9DE90068E786 /* KPFontPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CEA2C981BCE9DE90068E786 /* KPFontPicker.m */; };
 		8BE215731A45902C006EC5A5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BE215721A45902C006EC5A5 /* main.m */; };
 		8BE215761A45902C006EC5A5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BE215751A45902C006EC5A5 /* AppDelegate.m */; };
 		8BE215791A45902C006EC5A5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BE215781A45902C006EC5A5 /* ViewController.m */; };
@@ -30,6 +35,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2C28E4061BCEA3CA0031EDB3 /* MICKEY.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = MICKEY.TTF; sourceTree = "<group>"; };
+		2C28E4071BCEA3CA0031EDB3 /* Minnie.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = Minnie.TTF; sourceTree = "<group>"; };
+		2CD0F5101BCFEEF800312489 /* DK Petit Four.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DK Petit Four.otf"; sourceTree = "<group>"; };
+		2CD0F5141BCFEF7700312489 /* orange juice.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "orange juice.ttf"; sourceTree = "<group>"; };
+		2CEA2C971BCE9DE90068E786 /* KPFontPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPFontPicker.h; sourceTree = "<group>"; };
+		2CEA2C981BCE9DE90068E786 /* KPFontPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPFontPicker.m; sourceTree = "<group>"; };
 		8BE2156D1A45902C006EC5A5 /* IQLabelViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IQLabelViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BE215711A45902C006EC5A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8BE215721A45902C006EC5A5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -68,6 +79,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C28E4051BCEA3CA0031EDB3 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				2C28E4061BCEA3CA0031EDB3 /* MICKEY.TTF */,
+				2CD0F5101BCFEEF800312489 /* DK Petit Four.otf */,
+				2CD0F5141BCFEF7700312489 /* orange juice.ttf */,
+				2C28E4071BCEA3CA0031EDB3 /* Minnie.TTF */,
+			);
+			path = fonts;
+			sourceTree = "<group>";
+		};
+		2CEA2C961BCE9DE90068E786 /* font */ = {
+			isa = PBXGroup;
+			children = (
+				2CEA2C971BCE9DE90068E786 /* KPFontPicker.h */,
+				2CEA2C981BCE9DE90068E786 /* KPFontPicker.m */,
+			);
+			path = font;
+			sourceTree = "<group>";
+		};
 		8BE215641A45902C006EC5A5 = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				8BE215711A45902C006EC5A5 /* Info.plist */,
+				2C28E4051BCEA3CA0031EDB3 /* fonts */,
 				8BE215721A45902C006EC5A5 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -133,6 +165,7 @@
 			children = (
 				8BE215B31A4591D0006EC5A5 /* IQLabelView.h */,
 				8BE215B41A4591D0006EC5A5 /* IQLabelView.m */,
+				2CEA2C961BCE9DE90068E786 /* font */,
 				8BE215B51A4591D0006EC5A5 /* IQLabelView.bundle */,
 				8BE215B61A4591D0006EC5A5 /* UITextField+DynamicFontSize.h */,
 				8BE215B71A4591D0006EC5A5 /* UITextField+DynamicFontSize.m */,
@@ -220,9 +253,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CD0F5151BCFEF7700312489 /* orange juice.ttf in Resources */,
+				2C28E4081BCEA3CA0031EDB3 /* MICKEY.TTF in Resources */,
 				8BE2157C1A45902D006EC5A5 /* Main.storyboard in Resources */,
 				8BE215811A45902D006EC5A5 /* LaunchScreen.xib in Resources */,
 				8BE2157E1A45902D006EC5A5 /* Images.xcassets in Resources */,
+				2CD0F5121BCFEEF800312489 /* DK Petit Four.otf in Resources */,
+				2C28E4091BCEA3CA0031EDB3 /* Minnie.TTF in Resources */,
 				8BE215B91A4591D0006EC5A5 /* IQLabelView.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -244,6 +281,7 @@
 				8BE215BA1A4591D0006EC5A5 /* UITextField+DynamicFontSize.m in Sources */,
 				8BE215791A45902C006EC5A5 /* ViewController.m in Sources */,
 				8BE215B81A4591D0006EC5A5 /* IQLabelView.m in Sources */,
+				2CEA2C991BCE9DE90068E786 /* KPFontPicker.m in Sources */,
 				8BE215761A45902C006EC5A5 /* AppDelegate.m in Sources */,
 				8BE215731A45902C006EC5A5 /* main.m in Sources */,
 			);

@@ -6,14 +6,18 @@
 #import "UITextField+DynamicFontSize.h"
 #import "IQLabelView.h"
 
-@implementation UITextField (DynamicFontSize)
+@implementation UITextView (DynamicFontSize)
 
 #define CATEGORY_DYNAMIC_FONT_SIZE_MAXIMUM_VALUE 201
 #define CATEGORY_DYNAMIC_FONT_SIZE_MINIMUM_VALUE 5
 
+
+
 - (void)adjustsFontSizeToFillRect:(CGRect)newBounds
 {
-    NSString *text = (![self.text isEqualToString:@""] || !self.placeholder) ? self.text : self.placeholder;
+    NSString *text = self.text;
+    
+    
     
     for (int i = CATEGORY_DYNAMIC_FONT_SIZE_MAXIMUM_VALUE; i > CATEGORY_DYNAMIC_FONT_SIZE_MINIMUM_VALUE; i--) {
         UIFont *font = [UIFont fontWithName:self.font.fontName size:(CGFloat)i];
@@ -25,7 +29,7 @@
                                                        context:nil];
         
         if (CGRectGetHeight(rectSize) <= CGRectGetHeight(newBounds)) {
-            ((IQLabelView *)self.superview).fontSize = (CGFloat)i-2;
+            ((IQLabelView *)self.superview).apiFontSize = (CGFloat)i-2;
             break;
         }
     }
@@ -33,7 +37,7 @@
 
 - (void)adjustsWidthToFillItsContents
 {
-    NSString *text = (![self.text isEqualToString:@""] || !self.placeholder) ? self.text : self.placeholder;
+    NSString *text = self.text;
     UIFont *font = [UIFont fontWithName:self.font.fontName size:self.font.pointSize];
     NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text
                                                                          attributes:@{ NSFontAttributeName : font }];

@@ -38,6 +38,8 @@
     [self.view setBackgroundColor:[UIColor colorWithRed:88/255.0 green:173/255.0 blue:227/255.0 alpha:1.0]];
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchOutside:)]];
     [self.imageView setImage:[UIImage imageNamed:@"image"]];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -48,36 +50,80 @@
 - (void)addLabel
 {
     [currentlyEditingLabel hideEditingHandles];
-    CGRect labelFrame = CGRectMake(CGRectGetMidX(self.imageView.frame) - arc4random() % 20,
-                                   CGRectGetMidY(self.imageView.frame) - arc4random() % 20,
-                                   60, 50);
-    UITextField *aLabel = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+    CGRect labelFrame = CGRectMake(30,
+                                   30,
+                                   200, 150);
+    UITextView *aLabel = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 180, 120)];
+      aLabel.font = [UIFont fontWithName:@"Minnie" size:20];
     [aLabel setClipsToBounds:YES];
     [aLabel setAutoresizingMask:(UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin)];
-    [aLabel setText:@""];
-    if (arc4random() % 2 == 0) {
-        [aLabel setAttributedPlaceholder:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Placeholder", nil)
-                                                                         attributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.75] }]];
-    }
-    [aLabel setTextColor:[UIColor whiteColor]];
-    [aLabel sizeToFit];
+
+//        [aLabel setAttributedPlaceholder:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"ImagEdit", nil)
+//                                                                         attributes:@{ NSForegroundColorAttributeName : [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.75],  NSFontAttributeName : [UIFont fontWithName:@"Minnie" size:17.0]}]];
+
+    [aLabel setTextColor:[UIColor redColor]];
+
+   
     
     IQLabelView *labelView = [[IQLabelView alloc] initWithFrame:labelFrame];
     [labelView setAutoresizingMask:(UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth)];
     labelView.delegate = self;
     [labelView setShowContentShadow:NO];
     //[labelView setEnableMoveRestriction:YES];
+
+    
+    
+  
+    
     [labelView setTextField:aLabel];
-    [labelView setFontName:@"Baskerville-BoldItalic"];
-    [labelView setFontSize:21.0];
+
+
+    [labelView setTextColor:[UIColor redColor]];
+    
     [labelView sizeToFit];
+    labelView.delegate = self;
 //    [self.view addSubview:labelView];
+
+    
+    UIRotationGestureRecognizer *rotationRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotationDetected:)];
+    [self.imageView addGestureRecognizer:rotationRecognizer];
+    
+    UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchDetected:)];
+    [self.imageView addGestureRecognizer:pinchRecognizer];
+    
+
     [self.imageView addSubview:labelView];
     [self.imageView setUserInteractionEnabled:YES];
     
     currentlyEditingLabel = labelView;
+    
+    
+    [currentlyEditingLabel setTextColor:[UIColor redColor]];
+    
+
     [labels addObject:labelView];
 }
+
+
+- (void)pinchDetected:(UIPinchGestureRecognizer *)pinchRecognizer
+{
+//    [currentlyEditingLabel pinchViewPanGesture:pinchRecognizer];
+    
+    
+}
+
+- (void)rotationDetected:(UIRotationGestureRecognizer *)rotationRecognizer
+{
+
+        CGFloat angle = rotationRecognizer.rotation;
+        currentlyEditingLabel.transform = CGAffineTransformRotate(currentlyEditingLabel.transform, angle);
+        rotationRecognizer.rotation = 0.0;
+
+    
+}
+
+
+
 
 - (void)saveImage
 {

@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UITextField (DynamicFontSize)
+@interface UITextView (DynamicFontSize)
 
 - (void)adjustsFontSizeToFillRect:(CGRect)newBounds;
 - (void)adjustsWidthToFillItsContents;

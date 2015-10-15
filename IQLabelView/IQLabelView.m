@@ -5,6 +5,7 @@
 #import "IQLabelView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UITextField+DynamicFontSize.h"
+#import "KPFontPicker.h"
 
 CG_INLINE CGPoint CGRectGetCenter(CGRect rect)
 {
@@ -60,7 +61,7 @@ static IQLabelView *lastTouchedView;
 }
 
 @synthesize textColor = textColor, borderColor = borderColor;
-@synthesize fontName = fontName, fontSize = fontSize;
+@synthesize fontName = fontName, apiFontSize = apiFontSize;
 @synthesize enableClose = enableClose, enableRotate = enableRotate;
 @synthesize delegate = delegate;
 @synthesize showContentShadow = showContentShadow;
@@ -75,7 +76,7 @@ static IQLabelView *lastTouchedView;
         [rotateView setTransform:CGAffineTransformInvert(t)];
         
         if (isShowingEditingHandles) {
-            [textView.layer addSublayer:border];
+            [_textView.layer addSublayer:border];
         } else {
             [border removeFromSuperlayer];
         }
@@ -113,8 +114,7 @@ static IQLabelView *lastTouchedView;
         closeView.layer.cornerRadius = globalInset - 5;
         closeView.userInteractionEnabled = YES;
         [self addSubview:closeView];
-        
-        //Rotating view which is in bottom right corner
+     
         rotateView = [[UIImageView alloc] initWithFrame:CGRectMake(self.bounds.size.width-globalInset*2, self.bounds.size.height-globalInset*2, globalInset*2, globalInset*2)];
         [rotateView setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin)];
         rotateView.backgroundColor = [UIColor whiteColor];
@@ -143,16 +143,24 @@ static IQLabelView *lastTouchedView;
         [self setCloseImage:[UIImage imageNamed:@"IQLabelView.bundle/sticker_close.png"]];
         [self setRotateImage:[UIImage imageNamed:@"IQLabelView.bundle/sticker_resize.png"]];
         
+
+        NSArray *fonts = @[ @"MICKEY", @"Minnie",@"DK Petit Four", @"orange juice" ];
+        
+        self.picker = [[KPFontPicker alloc] initWithFonts:fonts];
+        self.picker.delegate = self;
+        
         [self showEditingHandles];
     }
     return self;
 }
 
+
+
 - (void)layoutSubviews
 {
-    if (textView) {
-        border.path = [UIBezierPath bezierPathWithRect:textView.bounds].CGPath;
-        border.frame = textView.bounds;
+    if (_textView) {
+        border.path = [UIBezierPath bezierPathWithRect:_textView.bounds].CGPath;
+        border.frame = _textView.bounds;
     }
 }
 
@@ -203,40 +211,140 @@ static IQLabelView *lastTouchedView;
 
 #pragma mark - Set Text Field
 
-- (void)setTextField:(UITextField *)field
+- (void)setTextField:(UITextView *)field
 {
-    [textView removeFromSuperview];
+    [_textView removeFromSuperview];
     
-    textView = field;
+    _textView = field;
     
-    textView.frame = CGRectInset(self.bounds, globalInset, globalInset);
+    _textView.frame = CGRectInset(self.bounds, globalInset, globalInset);
     
-    [textView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
-    textView.delegate = self;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.tintColor = [UIColor redColor];
-    [textView becomeFirstResponder];
+    [_textView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
+   
+    _textView.backgroundColor = [UIColor clearColor];
+    _textView.tintColor = [UIColor redColor];
+    [_textView becomeFirstResponder];
     
     border = [CAShapeLayer layer];
     border.strokeColor = borderColor.CGColor;
     border.fillColor = nil;
     border.lineDashPattern = @[@4, @3];
     
-    [self insertSubview:textView atIndex:0];
+    
+    _textView.delegate = self;
+    _textView.inputAccessoryView = [self createToolbar];
+    
+    
+    [self insertSubview:_textView atIndex:0];
+    
 }
+
+
+
+#pragma mark - KPFontpicker Delegate
+- (void)pickerDidSelectFont:(NSString *)font withSize:(CGFloat)fontSize color:(UIColor *)fontColor
+{
+    _textView.font = [UIFont fontWithName:font size:fontSize];
+    _textView.textColor = fontColor;
+//    [self textViewDidChange:textView];
+    //[_textView adjustsWidthToFillItsContents];
+}
+
+// Optional delegate
+- (void)pickerDidSelectFontColor:(UIColor *)fontColor
+{
+    NSLog(@"Color selected %@", fontColor);
+}
+
+#pragma mark - Toolbar
+- (UIToolbar *)createToolbar
+{
+    UIToolbar *keyboardDoneButtonView = [[UIToolbar alloc] init];
+    keyboardDoneButtonView.barTintColor = [UIColor darkGrayColor];
+    keyboardDoneButtonView.tintColor = [UIColor whiteColor];
+    [keyboardDoneButtonView sizeToFit];
+    
+    UIBarButtonItem *keyboardButton = [[UIBarButtonItem alloc] initWithTitle:@"Keyboard"
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(keyboardClicked:)];
+    
+    UIBarButtonItem *fontButton = [[UIBarButtonItem alloc] initWithTitle:@"Font"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(pickerClicked:)];
+    
+    UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                target:self
+                                                                                action:@selector(doneClicked:)];
+    
+    [keyboardDoneButtonView setItems:[NSArray arrayWithObjects:keyboardButton, fontButton, flex, doneButton, nil]];
+    
+    return keyboardDoneButtonView;
+}
+
+#pragma mark - Toolbar actions
+- (IBAction)keyboardClicked:(id)sender
+{
+    if ([_textView isFirstResponder]) {
+        _textView.inputView = nil;
+        
+        [_textView reloadInputViews];
+    }
+}
+
+- (IBAction)pickerClicked:(id)sender
+{
+    if ([_textView isFirstResponder]) {
+        _textView.inputView = self.picker;
+        [_textView reloadInputViews];
+        [self.picker setPickerText:_textView.text];
+
+    }
+}
+
+- (IBAction)doneClicked:(id)sender
+{
+    if ([_textView isFirstResponder]) {
+        _textView.inputView = nil;
+        
+        [_textView resignFirstResponder];
+    }
+}
+
+
 
 - (void)setFontName:(NSString *)name
 {
     fontName = name;
-    textView.font = [UIFont fontWithName:fontName size:fontSize];
-    [textView adjustsWidthToFillItsContents];
+    _textView.font = [UIFont fontWithName:fontName size:apiFontSize];
+  // [_textView adjustsWidthToFillItsContents];
 }
+
+-(UIViewController*)findViewControllerWithView:(UIView*)view{
+    
+    UIResponder *responder = view;
+    
+    while ((responder = responder.nextResponder) != nil) {
+        
+        if([responder isKindOfClass:[UIViewController class]]){
+            
+            break;
+        }
+        
+    }
+    
+    return (UIViewController*)responder;
+}
+
 
 - (void)setFontSize:(CGFloat)size
 {
-    fontSize = size;
+    apiFontSize = size;
     if (fontName!= nil) {
-        textView.font = [UIFont fontWithName:fontName size:fontSize];
+        _textView.font = [UIFont fontWithName:fontName size:apiFontSize];
     }
     
 }
@@ -244,7 +352,7 @@ static IQLabelView *lastTouchedView;
 - (void)setTextColor:(UIColor *)color
 {
     textColor = color;
-    textView.textColor = textColor;
+    _textView.textColor = textColor;
 }
 
 - (void)setBorderColor:(UIColor *)color
@@ -255,12 +363,12 @@ static IQLabelView *lastTouchedView;
 
 - (void)setTextAlpha:(CGFloat)alpha
 {
-    textView.alpha = alpha;
+    _textView.alpha = alpha;
 }
 
 - (CGFloat)textAlpha
 {
-    return textView.alpha;
+    return _textView.alpha;
 }
 
 #pragma mark - Bounds
@@ -271,12 +379,12 @@ static IQLabelView *lastTouchedView;
     
     isShowingEditingHandles = NO;
     
-    if (textView) {
+    if (_textView) {
         if (enableClose)       closeView.hidden = YES;
         if (enableRotate)      rotateView.hidden = YES;
         
         
-        [textView resignFirstResponder];
+        [_textView resignFirstResponder];
         
         
         [self refresh];
@@ -303,6 +411,8 @@ static IQLabelView *lastTouchedView;
     if (enableRotate)      rotateView.hidden = NO;
     
     [self refresh];
+    
+    [self.picker setPickerText:_textView.text];
     
     if([delegate respondsToSelector:@selector(labelViewDidShowEditingHandles:)]) {
         [delegate labelViewDidShowEditingHandles:self];
@@ -393,8 +503,9 @@ static IQLabelView *lastTouchedView;
         CGRect scaleRect = CGRectScale(initialBounds, scale, scale);
         
         if (scaleRect.size.width >= (1+globalInset*2 + 20) && scaleRect.size.height >= (1+globalInset*2 + 20)) {
-            if (fontSize < 100 || CGRectGetWidth(scaleRect) < CGRectGetWidth(self.bounds)) {
-                [textView adjustsFontSizeToFillRect:scaleRect];
+            if (apiFontSize < 100 || CGRectGetWidth(scaleRect) < CGRectGetWidth(self.bounds)) {
+                [_textView adjustsFontSizeToFillRect:scaleRect];
+               // [_textView adjustsWidthToFillItsContents];
                 [self setBounds:scaleRect];
             }
         }
@@ -409,9 +520,55 @@ static IQLabelView *lastTouchedView;
     }
 }
 
+
+//- (void)pinchViewPanGesture:(UIPinchGestureRecognizer*)recognizer
+//{
+//    touchLocation = [recognizer locationInView:self.superview];
+//    
+//    CGPoint center = CGRectGetCenter(self.frame);
+//    
+//    if ([recognizer state] == UIGestureRecognizerStateBegan) {
+//        deltaAngle = atan2(touchLocation.y-center.y, touchLocation.x-center.x)-CGAffineTransformGetAngle(self.transform);
+//        
+//        initialBounds = self.bounds;
+//        initialDistance = CGPointGetDistance(center, touchLocation);
+//        
+//        if([delegate respondsToSelector:@selector(labelViewDidBeginEditing:)]) {
+//            [delegate labelViewDidBeginEditing:self];
+//        }
+//    } else if ([recognizer state] == UIGestureRecognizerStateChanged) {
+//        float ang = atan2(touchLocation.y-center.y, touchLocation.x-center.x);
+//        
+//        float angleDiff = deltaAngle - ang;
+////        [self setTransform:CGAffineTransformMakeRotation(-angleDiff)];
+////        [self setNeedsDisplay];
+//        
+//        //Finding scale between current touchPoint and previous touchPoint
+//        double scale = sqrtf(CGPointGetDistance(center, touchLocation)/initialDistance);
+//        
+//        CGRect scaleRect = CGRectScale(initialBounds, scale, scale);
+//        
+//        if (scaleRect.size.width >= (1+globalInset*2 + 20) && scaleRect.size.height >= (1+globalInset*2 + 20)) {
+//            if (apiFontSize < 100 || CGRectGetWidth(scaleRect) < CGRectGetWidth(self.bounds)) {
+//                [_textView adjustsFontSizeToFillRect:scaleRect];
+//                // [_textView adjustsWidthToFillItsContents];
+//                [self setBounds:scaleRect];
+//            }
+//        }
+//        
+//        if([delegate respondsToSelector:@selector(labelViewDidChangeEditing:)]) {
+//            [delegate labelViewDidChangeEditing:self];
+//        }
+//    } else if ([recognizer state] == UIGestureRecognizerStateEnded) {
+//        if([delegate respondsToSelector:@selector(labelViewDidEndEditing:)]) {
+//            [delegate labelViewDidEndEditing:self];
+//        }
+//    }
+//}
+
 #pragma mark - UITextField Delegate
 
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textField
 {
     if (isShowingEditingHandles) {
         return YES;
@@ -420,21 +577,25 @@ static IQLabelView *lastTouchedView;
     return NO;
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+- (void)textViewDidBeginEditing:(UITextView *)textField
 {
     if([delegate respondsToSelector:@selector(labelViewDidStartEditing:)]) {
+         [self.picker setPickerText:_textView.text];
         [delegate labelViewDidStartEditing:self];
     }
     
-    [textView adjustsWidthToFillItsContents];
+    [_textView adjustsFontSizeToFillRect:self.textView.frame];
+    
+    //[_textView adjustsWidthToFillItsContents];
+   
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+- (BOOL)textView:(UITextView *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     if (!isShowingEditingHandles) {
         [self showEditingHandles];
     }
-    [textView adjustsWidthToFillItsContents];
+   // [_textView adjustsWidthToFillItsContents];
     return YES;
 }
 

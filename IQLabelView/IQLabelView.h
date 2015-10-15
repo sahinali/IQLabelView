@@ -3,23 +3,28 @@
 //  Created by kcandr on 17/12/14.
 
 #import <UIKit/UIKit.h>
+#import "KPFontPicker.h"
 
 @protocol IQLabelViewDelegate;
 
-@interface IQLabelView : UIView<UIGestureRecognizerDelegate, UITextFieldDelegate>
+@interface IQLabelView : UIView<UIGestureRecognizerDelegate, UITextViewDelegate,KPFontPickerDelegate>
 {
-    UITextField *textView;
     UIImageView *rotateView;
     UIImageView *closeView;
     
     BOOL isShowingEditingHandles;
 }
 
+
+
+@property(strong, nonatomic) UITextView *textView;
+
+@property(strong, nonatomic) KPFontPicker *picker;
 @property (assign, nonatomic) UIColor *textColor;
 @property (assign, nonatomic) UIColor *borderColor;
 
 @property (strong, nonatomic) NSString *fontName;
-@property (assign, nonatomic) CGFloat fontSize;
+@property (assign, nonatomic) CGFloat apiFontSize;
 
 @property (assign, nonatomic) UIImage *closeImage;
 @property (assign, nonatomic) UIImage *rotateImage;
@@ -34,9 +39,12 @@
 - (void)refresh;
 
 - (void)hideEditingHandles;
+//
+//- (void)pinchViewPanGesture:(UIPinchGestureRecognizer*)recognizer;
 - (void)showEditingHandles;
 
-- (void)setTextField:(UITextField *)field;
+- (void)setTextField:(UITextView *)field;
+
 - (void)setTextAlpha:(CGFloat)alpha;
 - (CGFloat)textAlpha;
 
